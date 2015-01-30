@@ -27,7 +27,7 @@ class PresentationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Presentation
-        fields = ('name', 'user', 'slides')
+        fields = ('id','name', 'user', 'slides')
 
     def create(self, validated_data):
         print validated_data
