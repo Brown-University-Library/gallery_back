@@ -4,9 +4,9 @@ from . import models
 class SlideInline(admin.TabularInline):
     model = models.Slide
 
-class PresentationAdmin(admin.ModelAdmin):
+class ProgramAdmin(admin.ModelAdmin):
     inlines = [
         SlideInline,
     ]
 # Register your models here.
-admin.site.register(models.Presentation, PresentationAdmin)
+admin.site.register(models.Program, ProgramAdmin)

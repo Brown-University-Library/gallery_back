@@ -9,7 +9,7 @@ from jsonfield import JSONField
 # Create your models here.
 
 
-class Presentation(TimeStampedModel):
+class Program(TimeStampedModel):
     name = models.CharField(max_length=255) 
     user = models.ForeignKey(User)
 
@@ -19,12 +19,12 @@ class Presentation(TimeStampedModel):
 class Slide(TimeStampedModel):
     pid = models.CharField(max_length=255)
     durration = models.IntegerField(default=0)
-    presentation = models.ForeignKey(Presentation, related_name='slides')
+    program = models.ForeignKey(Program, related_name='slides')
 
     def __unicode__(self):
         return "%s   | %d ms" %(self.pid, self.durration)
 
     class Meta:
-        order_with_respect_to = 'presentation'
+        order_with_respect_to = 'program'
 
 

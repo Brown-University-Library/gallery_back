@@ -11,9 +11,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
-class PresentationViewSet(viewsets.ModelViewSet):
-    queryset = models.Presentation.objects.all()
-    serializer_class = serializers.PresentationSerializer
+class ProgramViewSet(viewsets.ModelViewSet):
+    queryset = models.Program.objects.all()
+    serializer_class = serializers.ProgramSerializer
 
 class SlideViewSet(viewsets.ModelViewSet):
     queryset = models.Slide.objects.all()

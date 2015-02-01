@@ -17,28 +17,24 @@ class SlideSerializer2(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Slide
         fields=('pid', 'durration')
-        read_only_fields=('presentation', '_order')
+        read_only_fields=('program', '_order')
 
 
-class PresentationSerializer(serializers.HyperlinkedModelSerializer):
+class ProgramSerializer(serializers.HyperlinkedModelSerializer):
     slides = SlideSerializer2(many=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    #slides = serializers.StringRelatedField(many=True)
 
     class Meta:
-        model = models.Presentation
+        model = models.Program
         fields = ('id','name', 'user', 'slides')
 
     def create(self, validated_data):
-        print validated_data
         slides_data = validated_data.pop('slides', [])
-        print slides_data
-        presentation = models.Presentation.objects.create(**validated_data)
+        program = models.Program.objects.create(**validated_data)
         slides = [ models.Slide(**sd) for sd in slides_data ] 
         for order, slide in enumerate(slides):
-            slide.presentation = presentation
+            slide.program = program
             slide._order=order
         if slides:
             models.Slide.objects.bulk_create( slides )
-        return presentation
-
+        return program

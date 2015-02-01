@@ -5,7 +5,7 @@ from gallery_back import views
 
 router =  routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'presentations', views.PresentationViewSet)
+router.register(r'programs', views.ProgramViewSet)
 router.register(r'slides', views.SlideViewSet)
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
