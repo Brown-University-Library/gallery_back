@@ -10,3 +10,4 @@ class ProgramAdmin(admin.ModelAdmin):
     ]
 # Register your models here.
 admin.site.register(models.Program, ProgramAdmin)
+admin.site.register(models.Slide)
