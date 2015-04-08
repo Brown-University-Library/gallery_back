@@ -20,8 +20,3 @@ class ProgramViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-class SlideViewSet(viewsets.ModelViewSet):
-    queryset = models.Slide.objects.all()
-    serializer_class = serializers.SlideSerializer

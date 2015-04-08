@@ -9,75 +9,75 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email')
 
 
-class SlideSerializer(serializers.HyperlinkedModelSerializer):
+class PresentationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = models.Slide
+        model = models.Presentation
         fields=('pid', 'durration')
         read_only_fields=('program', '_order')
 
-class SlideSerializer2(serializers.HyperlinkedModelSerializer):
+class PresentationSerializer2(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = models.Slide
+        model = models.Presentation
         fields=('pid', 'durration')
         read_only_fields=('program', '_order')
 
 
 class ProgramSerializer(serializers.HyperlinkedModelSerializer):
-    slides = SlideSerializer2(many=True)
+    presentations = PresentationSerializer2(many=True)
     #user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     owner = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = models.Program
-        fields = ('id','name', 'owner', 'slides')
+        fields = ('id','name', 'owner', 'presentations')
 
     def create(self, validated_data):
-        slides_data = validated_data.pop('slides', [])
+        presentations_data = validated_data.pop('presentations', [])
         program = models.Program(**validated_data)
         program.save()
-        slides = [ models.Slide(**sd) for sd in slides_data ] 
-        for order, slide in enumerate(slides):
-            slide.program = program
-            slide._order=order
-        if slides:
-            models.Slide.objects.bulk_create( slides )
+        presentations = [ models.Presentation(**sd) for sd in presentations_data ] 
+        for order, presentation in enumerate(presentations):
+            presentation.program = program
+            presentation._order=order
+        if presentations:
+            models.Presentation.objects.bulk_create( presentations )
         return program
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.save()
 
-        slides_data = validated_data.pop('slides', [])
-        current_slides = instance.slides.all()
-        paired_slides = zip(current_slides, slides_data)
-        orphaned_slides = current_slides[len(slides_data):]
-        new_slide_data = slides_data[current_slides.count():]
+        presentations_data = validated_data.pop('presentations', [])
+        current_presentations = instance.presentations.all()
+        paired_presentations = zip(current_presentations, presentations_data)
+        orphaned_presentations = current_presentations[len(presentations_data):]
+        new_presentation_data = presentations_data[current_presentations.count():]
 
-        for orphan in orphaned_slides:
+        for orphan in orphaned_presentations:
             orphan.delete()
 
-        slide_serializer = SlideSerializer2()
-        for current, sd in paired_slides:
-            slide_serializer.update(current, sd).save()
+        presentation_serializer = PresentationSerializer2()
+        for current, sd in paired_presentations:
+            presentation_serializer.update(current, sd).save()
         
-        pair_total = instance.slides.count()
-        new_slides = [ models.Slide(**sd) for sd in new_slide_data]
-        for order, slide in enumerate(new_slides):
-            slide.program = instance
-            slide._order= pair_total + order
+        pair_total = instance.presentations.count()
+        new_presentations = [ models.Presentation(**sd) for sd in new_presentation_data]
+        for order, presentation in enumerate(new_presentations):
+            presentation.program = instance
+            presentation._order= pair_total + order
         
-        if new_slides:
-            models.Slide.objects.bulk_create( new_slides )
+        if new_presentations:
+            models.Presentation.objects.bulk_create( new_presentations )
         return instance
 
 
 
     
 
-        slides = [ models.Slide(**sd) for sd in slides_data ] 
-        for order, slide in enumerate(slides):
-            slide._order=order
-        if slides:
-            instance.slides.clear()
-            instance.slides = slides
+        presentations = [ models.Presentation(**sd) for sd in presentations_data ] 
+        for order, presentation in enumerate(presentations):
+            presentation._order=order
+        if presentations:
+            instance.presentations.clear()
+            instance.presentations = presentations
         return instance

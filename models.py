@@ -16,10 +16,10 @@ class Program(TimeStampedModel):
     def __unicode__(self):
         return "%s" %(self.name, )
 
-class Slide(TimeStampedModel):
+class Presentation(TimeStampedModel):
     pid = models.CharField(max_length=255)
     durration = models.IntegerField(default=0)
-    program = models.ForeignKey(Program, related_name='slides')
+    program = models.ForeignKey(Program, related_name='presentations')
 
     def __unicode__(self):
         return "%s   | %d ms" %(self.pid, self.durration)
